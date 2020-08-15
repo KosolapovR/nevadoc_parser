@@ -1,0 +1,19 @@
+{
+    "name": "roman/public_html",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Kosolapov Roman",
+            "email": "kosolapov-r@bk.ru"
+        }
+    ],
+    "require": {
+        "league/csv": "^9.6",
+        "vlucas/phpdotenv": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

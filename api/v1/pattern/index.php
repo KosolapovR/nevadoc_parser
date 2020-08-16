@@ -20,9 +20,14 @@ switch ($_SERVER['REQUEST_METHOD']){
             $pattern = new Pattern($data['pattern'], $data['productName'], $data['seller']);
 
             $res = $db->addPattern($pattern);
-            echo json_encode(['res' => $res]);
+            echo json_encode(['res' => $res], true);
         }
 
+        break;
+    }
+    case 'GET':{
+        echo json_encode(['res' => 'method Get'], true);
+        break;
     }
 }
 

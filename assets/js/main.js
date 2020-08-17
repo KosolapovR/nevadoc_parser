@@ -1,6 +1,7 @@
 function ready() {
     const form = document.forms['addPattern'];
     const notification = document.getElementById('notification');
+    const fileInput = document.getElementById('fileUpload');
 
     function handleAddPattern(e) {
         e.preventDefault();
@@ -39,7 +40,6 @@ function ready() {
             })
     }
 
-
     async function sendData(data) {
         const response = await fetch('http://parser.loc/api/v1/pattern/', {
             method: 'POST',
@@ -53,8 +53,31 @@ function ready() {
         return response.json();
     }
 
-    form.addEventListener('submit', handleAddPattern)
+    const handleImageUpload = event => {
+        const files = event.target.files
+        const formData = new FormData()
+        formData.append('excelTable', files[0])
 
+        fetch('http://parser.loc/api/v1/file/', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
+    if ('http://parser.loc/add-pattern/' === window.location.href)
+        form.addEventListener('submit', handleAddPattern)
+
+    if ('http://parser.loc/' === window.location.href)
+        fileInput.addEventListener('change', event => {
+            handleImageUpload(event);
+        });
 }
 
 document.addEventListener('DOMContentLoaded', ready);

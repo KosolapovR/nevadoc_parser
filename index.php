@@ -1,6 +1,6 @@
 <?php require 'src/template/header.php'?>
 
-<h3>главаная</h3>
+<input type="file" id="fileUpload" />
 
 <?php require 'src/template/footer.php'?>
 

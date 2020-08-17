@@ -42,3 +42,21 @@ input[type=submit]:hover {
     background-color: #f2f2f2;
     padding: 20px;
 }
+
+#notification{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: max-content;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+.notification_success{
+    background: #80b883;
+}
+
+.notification_error{
+    background: #b88083;
+}

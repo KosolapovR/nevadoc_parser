@@ -28,7 +28,7 @@ function ready() {
             .then(response => {
                 debugger;
                 if (response.res) {
-                    form.reset();
+                    // form.reset();
 
                     notification.innerText = 'Паттерн сохранен';
 

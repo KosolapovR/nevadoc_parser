@@ -46,6 +46,20 @@ class DB
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getProductByPattern(string $pattern){
+        $sql = "SELECT p.name, p.size, p.color, p.material, p.sleeve, p.print 
+                FROM products p 
+                WHERE p.pattern = :pattern";
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute(
+            [
+                ':pattern' => $pattern,
+            ]
+        );
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
     private function connect()
     {
         try {

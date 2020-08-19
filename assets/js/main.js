@@ -54,24 +54,37 @@ function ready() {
     function handleParseFile(e) {
         e.preventDefault()
 
+
         const uri = 'parser/'
 
         const $table = document.getElementById('parsedDataTable');
+        const seller = document.getElementById('seller').value;
 
-        sendData(uri)
+        sendData(uri, JSON.stringify({seller})
+        )
             .then(res => {
+                debugger;
+                if (res.response !== 'Unknown seller') {
+                    let tableHTML = '';
 
-                let tableHTML = '';
-                res.response.forEach(row => {
-                    tableHTML += "<tr>";
-
-                    row.forEach(col => {
-                        tableHTML += `<td colspan="">${col}</td>`;
+                    res.response.forEach(product => {
+                        tableHTML += "<tr>";
+                        tableHTML += `<td>${product.name}</td>`;
+                        tableHTML += `<td>${product.size || ''}</td>`;
+                        tableHTML += `<td>${product.color || ''}</td>`;
+                        tableHTML += `<td>${product.material || ''}</td>`;
+                        tableHTML += `<td>${product.sleeve || ''}</td>`;
+                        tableHTML += `<td>${product.print || ''}</td>`;
+                        tableHTML += `<td>${product.quantity}</td>`;
+                        tableHTML += `<td>${product.price}</td>`;
+                        tableHTML += "</tr>";
                     })
-                    tableHTML += "</tr>";
-                })
 
-                $table.innerHTML = tableHTML;
+                    $table.innerHTML = tableHTML;
+                }else{
+                    $table.innerHTML = '';
+                }
+
             })
     }
 

@@ -1,10 +1,10 @@
-<?php require '../src/template/header.php'?>
+<?php require '../src/template/header.php' ?>
 
 <div class="form-wrapper">
     <form name="addPattern">
         <label for="seller">Поставщик</label>
         <select id="seller" name="seller">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="DoctorStil">Доктор стиль</option>
             <option value="DoctorBig">Докто Биг</option>
             <option value="IridaMed">Ирида Мед</option>
@@ -20,7 +20,7 @@
         </div>
         <label for="size">Размер</label>
         <select id="size" name="size">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="38">38</option>
             <option value="40">40</option>
             <option value="42">42</option>
@@ -37,12 +37,18 @@
             <option value="64">64</option>
             <option value="66">66</option>
             <option value="68">68</option>
-            <option value="70">70</option>
+            <option value="40/42">40/42</option>
+            <option value="44/46">44/46</option>
+            <option value="48/50">48/50</option>
+            <option value="52/54">52/54</option>
+            <option value="56/58">56/58</option>
+            <option value="60/62">60/62</option>
+            <option value="64/66">64/66</option>
         </select>
 
         <label for="color">Цвет</label>
         <select id="color" name="color">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="африка">африка</option>
             <option value="баклаж.">баклаж.</option>
             <option value="бел.">бел.</option>
@@ -81,6 +87,8 @@
             <option value="сер./син.">сер./син.</option>
             <option value="син.">син.</option>
             <option value="син./зел.">син./зел.</option>
+            <option value="сирень">сирень</option>
+            <option value="т.бирюз.">т.бирюз.</option>
             <option value="т.син.">т.син.</option>
             <option value="т.син./малина">т.син./малина</option>
             <option value="т.син./роз.">т.син./роз.</option>
@@ -100,7 +108,7 @@
 
         <label for="material">Материал</label>
         <select id="material" name="material">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="сатори">сатори</option>
             <option value="т/с">т/с</option>
             <option value="трикотаж">трикотаж</option>
@@ -111,7 +119,7 @@
 
         <label for="sleeve">Рукав</label>
         <select id="sleeve" name="sleeve">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="к. рук.">к. рук.</option>
             <option value="3/4">3/4</option>
             <option value="дл. рук.">дл. рук.</option>
@@ -119,7 +127,7 @@
 
         <label for="print">Принт</label>
         <select id="print" name="print">
-            <option hidden disabled value selected></option>
+            <option disabled value selected></option>
             <option value="мишки">мишки</option>
             <option value="девочки">девочки</option>
             <option value="микки">микки</option>
@@ -141,5 +149,5 @@
     </form>
 </div>
 
-<?php require '../src/template/footer.php'?>
+<?php require '../src/template/footer.php' ?>
 

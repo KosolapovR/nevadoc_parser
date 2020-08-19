@@ -2,6 +2,12 @@
 require '../../../vendor/autoload.php';
 header('Access-Control-Allow-Origin: *');
 
+$dotenv = \Dotenv\Dotenv::createImmutable(dirname(__FILE__, 4));
+$dotenv->load();
+
+use App\Classes\DB;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
 $reader->setReadDataOnly(TRUE);
 $spreadsheet = $reader->load($_SERVER['DOCUMENT_ROOT'] . '/uploads/data.xls');
@@ -14,27 +20,95 @@ $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFrom
 
 $parsedArray = [];
 
-for ($row = 24, $i = 0; $row <= $highestRow; ++$row, ++$i) {
+$parsedArray[0] = [
+    'name' => 'Наименование',
+    'size' => 'Размер',
+    'color' => 'Цвет',
+    'material' => 'Ткань',
+    'sleeve' => 'Рукав',
+    'print' => 'Принт',
+    'quantity' => 'Количество',
+    'price' => 'Цена'
+];
 
-    for ($col = 2, $j = 0; $col <= $highestColumnIndex; ++$col, ++$j) {
-        $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
-        if ($row > 24 && $col === 2) {
-            if ($value != $worksheet->getCellByColumnAndRow($col, $row - 1)->getValue() + 1) {
-                goto end;
-            }
+$startRow = 1;
+$startCol = 1;
+$nameColumn = 2;
+$quantityColumn = 3;
+$priceColumn = 4;
+$discountColumn = 5;
+
+$postData = file_get_contents('php://input');
+$data = json_decode($postData, true);
+
+if (isset($data['seller']) && !empty($data['seller']))
+    switch ($data['seller']) {
+        case 'DoctorBig':
+        {
+            $startRow = 24;
+            $startCol = 2;
+            $nameColumn = 7;
+            $quantityColumn = 15;
+            $priceColumn = 31;
+            break;
         }
-
-        if($col === 3){
-
+        case 'IridaMed': {
+            $startRow = 25;
+            $startCol = 2;
+            $nameColumn = 4;
+            $quantityColumn = 21;
+            $priceColumn = 28;
+            $discountColumn = 33;
+            break;
         }
-
-        $prevValue = $value;
-
-        if (!empty($value))
-            $parsedArray[$i][] = $value;
+        default: {
+            echo json_encode(['response' => 'Unknown seller']);
+            die();
+        }
     }
-}
-end:
+for ($row = $startRow, $i = 1; $row <= $highestRow; ++$row, ++$i) {
+    $index = $worksheet->getCellByColumnAndRow($startCol, $row)->getValue();
+    if ($row > $startRow && $index != $worksheet->getCellByColumnAndRow($startCol, $row - 1)->getValue() + 1) {
+        break;
+    }
 
-echo json_encode(['response' => $parsedArray]);
+    $value = $worksheet->getCellByColumnAndRow($nameColumn, $row)->getValue();
+
+    $db = new DB();
+    $product = $db->getProductByPattern($value);
+    $product['quantity'] = $worksheet->getCellByColumnAndRow($quantityColumn, $row)->getValue();
+    $product['price'] = $worksheet->getCellByColumnAndRow($priceColumn, $row)->getValue();
+    if($data['seller'] === 'IridaMed')
+    {
+        $basePrice = (float)($worksheet->getCellByColumnAndRow($priceColumn, $row)->getValue());
+        $spreadsheet->getActiveSheet()->getStyle("AG25")
+            ->getNumberFormat()
+            ->setFormatCode(
+                \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_00
+            );
+        $discount = $worksheet->getCellByColumnAndRow($discountColumn, $row)->getValue();
+        $discount = floatval(str_replace(',', '.', str_replace('.', '', $discount)));
+        $product['price'] = $basePrice - $discount;
+
+    }
+
+    $parsedArray[$i] = $product;
+}
+
+$resultWorksheet = $spreadsheet->createSheet();
+$resultWorksheet->fromArray(
+    $parsedArray,  // The data to set
+    NULL,        // Array values with this value will not be set
+    'A1');
+
+$writer = new Xls($spreadsheet);
+try {
+    $spreadsheet->setActiveSheetIndex(1);
+} catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+    //TODO
+}
+$writer->save($_SERVER['DOCUMENT_ROOT'] . "/uploads/result.xls");
+
+
+echo json_encode(['response' => $parsedArray], 2);
 

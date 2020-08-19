@@ -18,26 +18,38 @@ class DB
 
     public function addPattern(Pattern $pattern)
     {
-        $sql = 'INSERT INTO products (seller, pattern, product) 
-                VALUES (:seller, :pattern, :productName)';
+        $sql = 'INSERT INTO products (seller, pattern, name, size, color, material, sleeve, print) 
+                VALUES (:seller, :pattern, :productName, :size, :color, :material, :sleeve, :print)';
+
         $stm = $this->pdo->prepare($sql);
+
         return $stm->execute(
             [
                 ':seller' => $pattern->getSeller(),
                 ':pattern' => $pattern->getPattern(),
-                ':productName' => $pattern->getProductName()
+                ':productName' => $pattern->getProductName(),
+                ':size' => $pattern->getSize(),
+                ':color' => $pattern->getColor(),
+                ':material' => $pattern->getMaterial(),
+                ':sleeve' => $pattern->getSleeve(),
+                ':print' => $pattern->getPrint()
             ]
         );
+    }
+
+    public function findProduct(string $pattern)
+    {
+        $query = "SELECT DISTINCT p.name FROM products p WHERE p.name LIKE ?";
+        $params = array("%$pattern%");
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     private function connect()
     {
         try {
             $this->pdo = new \PDO("mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}", $_ENV['DB_USER'], $_ENV['DB_PASS']);
-//            foreach($this->pdo->query('SELECT * from products') as $row) {
-//                print_r($row);
-//            }
-            $pdo = null;
         } catch (\PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die();

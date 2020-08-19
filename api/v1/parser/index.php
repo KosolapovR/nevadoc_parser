@@ -12,26 +12,29 @@ $highestRow = $worksheet->getHighestRow(); // e.g. 10
 $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
 $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
+$parsedArray = [];
 
-echo '<table>' . "\n";
+for ($row = 24, $i = 0; $row <= $highestRow; ++$row, ++$i) {
 
-for ($row = 24; $row <= $highestRow; ++$row) {
-    echo '<tr>' . PHP_EOL;
-
-    for ($col = 2; $col <= $highestColumnIndex; ++$col) {
+    for ($col = 2, $j = 0; $col <= $highestColumnIndex; ++$col, ++$j) {
         $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
-        if($row > 24 && $col === 2){
-            if($value != $worksheet->getCellByColumnAndRow($col, $row - 1)->getValue() + 1){
+        if ($row > 24 && $col === 2) {
+            if ($value != $worksheet->getCellByColumnAndRow($col, $row - 1)->getValue() + 1) {
                 goto end;
             }
         }
+
+        if($col === 3){
+
+        }
+
         $prevValue = $value;
-        echo '<td>' . $value . '</td>' . PHP_EOL;
+
+        if (!empty($value))
+            $parsedArray[$i][] = $value;
     }
-    echo '</tr>' . PHP_EOL;
 }
 end:
-echo '</table>' . PHP_EOL;
 
-return json_encode(['response' => $parsedArray]);
+echo json_encode(['response' => $parsedArray]);
 

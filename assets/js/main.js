@@ -2,6 +2,10 @@ function ready() {
     const form = document.forms['addPattern'];
     const notification = document.getElementById('notification');
     const fileInput = document.getElementById('fileUpload');
+    const parsingButton = document.getElementById('parsingButton');
+    const productName = document.getElementById('productName');
+    const autocompleteList = document.querySelector('.autocomplete__list');
+
 
     function handleAddPattern(e) {
         e.preventDefault();
@@ -11,12 +15,19 @@ function ready() {
         let pattern = formData.get('pattern');
         let productName = formData.get('productName');
         let seller = formData.get('seller');
+        let size = formData.get('size');
+        let color = formData.get('color');
+        let material = formData.get('material');
+        let sleeve = formData.get('sleeve');
+        let print = formData.get('print');
 
-        const data = JSON.stringify({pattern, productName, seller});
+        const data = JSON.stringify({pattern, productName, seller, size, color, material, sleeve, print});
+        const uri = 'pattern/'
 
-        sendData(data)
-            .then(res => {
-                if (res) {
+        sendData(uri, data)
+            .then(response => {
+                debugger;
+                if (response.res) {
                     form.reset();
 
                     notification.innerText = 'Паттерн сохранен';
@@ -40,8 +51,32 @@ function ready() {
             })
     }
 
-    async function sendData(data) {
-        const response = await fetch('http://parser.loc/api/v1/pattern/', {
+    function handleParseFile(e) {
+        e.preventDefault()
+
+        const uri = 'parser/'
+
+        const $table = document.getElementById('parsedDataTable');
+
+        sendData(uri)
+            .then(res => {
+
+                let tableHTML = '';
+                res.response.forEach(row => {
+                    tableHTML += "<tr>";
+
+                    row.forEach(col => {
+                        tableHTML += `<td colspan="">${col}</td>`;
+                    })
+                    tableHTML += "</tr>";
+                })
+
+                $table.innerHTML = tableHTML;
+            })
+    }
+
+    async function sendData(uri, data = null,) {
+        const response = await fetch('http://parser.loc/api/v1/' + uri, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -71,13 +106,54 @@ function ready() {
             })
     }
 
-    if ('http://parser.loc/add-pattern/' === window.location.href)
-        form.addEventListener('submit', handleAddPattern)
+    function handleAutocomplete(e) {
+        let pattern = e.target.value;
+        if (pattern.length < 3) {
+            document.querySelector('.autocomplete__list').innerHTML = '';
+            return;
+        }
 
-    if ('http://parser.loc/' === window.location.href)
+        let encoded = encodeURI(pattern);
+
+        fetch(`http://parser.loc/api/v1/pattern?productName=${encoded}`)
+            .then(response => {
+                response.json()
+                    .then(data => {
+                        autocompleteList.innerHTML = '';
+
+                        let $row = '';
+
+                        if (data.success) {
+                            data.products.forEach(product => {
+                                $row += `<li class="autocomplete__item">${product.name}</li>`;
+                            })
+
+                            autocompleteList.innerHTML = $row;
+                        }
+                    })
+            });
+    }
+
+    function handleSelectProductName(e) {
+        const selectedProduct = e.target.innerText;
+
+        autocompleteList.innerHTML = '';
+        productName.value = selectedProduct;
+    }
+
+    if ('http://parser.loc/add-pattern/' === window.location.href) {
+        form.addEventListener('submit', handleAddPattern)
+        productName.addEventListener('keyup', handleAutocomplete)
+        autocompleteList.addEventListener('click', handleSelectProductName)
+    }
+
+
+    if ('http://parser.loc/' === window.location.href) {
         fileInput.addEventListener('change', event => {
             handleImageUpload(event);
         });
+        parsingButton.addEventListener('click', handleParseFile)
+    }
 }
 
 document.addEventListener('DOMContentLoaded', ready);

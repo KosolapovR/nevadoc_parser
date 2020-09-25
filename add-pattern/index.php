@@ -37,6 +37,8 @@
             <option value="64">64</option>
             <option value="66">66</option>
             <option value="68">68</option>
+            <option value="70">70</option>
+            <option value="72">72</option>
             <option value="40/42">40/42</option>
             <option value="44/46">44/46</option>
             <option value="48/50">48/50</option>
@@ -60,6 +62,7 @@
             <option value="бел./сирень">бел./сирень</option>
             <option value="бирюз.">бирюз.</option>
             <option value="блю марин">блю марин</option>
+            <option value="блю опал">блю опал</option>
             <option value="бордо">бордо</option>
             <option value="вас.">вас.</option>
             <option value="вас./бел.">вас./бел.</option>
@@ -70,6 +73,7 @@
             <option value="жемч.">жемч.</option>
             <option value="зел.">зел.</option>
             <option value="зел.лист">зел.лист</option>
+            <option value="коралл">коралл</option>
             <option value="красн.">красн.</option>
             <option value="крем.">крем.</option>
             <option value="лаванда">лаванда</option>
@@ -79,12 +83,15 @@
             <option value="молекула">молекула</option>
             <option value="мята">мята</option>
             <option value="настур.">настур.</option>
+            <option value="нэви">нэви</option>
             <option value="опал">опал</option>
+            <option value="персик">персик</option>
             <option value="роз.">роз.</option>
             <option value="салат.">салат.</option>
             <option value="сер.">сер.</option>
             <option value="сер./гол.">сер./гол.</option>
             <option value="сер./син.">сер./син.</option>
+            <option value="сер./син./горч.">сер./син./горч.</option>
             <option value="син.">син.</option>
             <option value="син./зел.">син./зел.</option>
             <option value="сирень">сирень</option>
@@ -97,23 +104,27 @@
             <option value="фиолет./сир.">фиолет./сир.</option>
             <option value="фиолет./роз.">фиолет./роз.</option>
             <option value="фукс.">фукс.</option>
+            <option value="хаки/горч.">хаки/горч.</option>
             <option value="черн.">черн.</option>
             <option value="черн./бел.">черн./бел.</option>
+            <option value="черн./ярк.коралл.">черн./ярк.коралл.</option>
             <option value="черника">черника</option>
             <option value="черника/бирюза">черника/бирюза</option>
             <option value="черника/з.ябл.">черника/з.ябл.</option>
             <option value="черника/коралл">черника/коралл</option>
             <option value="черника/лайм.">черника/лайм</option>
+            <option value="ярк/коралл.">ярк/коралл</option>
         </select>
 
         <label for="material">Материал</label>
         <select id="material" name="material">
             <option disabled value selected></option>
+            <option value="полулен">полулен</option>
             <option value="сатори">сатори</option>
-            <option value="т/с">т/с</option>
-            <option value="трикотаж">трикотаж</option>
             <option value="сат. лайт">сат. лайт</option>
             <option value="стрейч">стрейч</option>
+            <option value="т/с">т/с</option>
+            <option value="трикотаж">трикотаж</option>
             <option value="терикотон">терикотон</option>
         </select>
 
@@ -121,6 +132,7 @@
         <select id="sleeve" name="sleeve">
             <option disabled value selected></option>
             <option value="к. рук.">к. рук.</option>
+            <option value="1/2">1/2</option>
             <option value="3/4">3/4</option>
             <option value="дл. рук.">дл. рук.</option>
         </select>

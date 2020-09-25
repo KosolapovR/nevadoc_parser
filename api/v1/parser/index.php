@@ -28,7 +28,8 @@ $parsedArray[0] = [
     'sleeve' => 'Рукав',
     'print' => 'Принт',
     'quantity' => 'Количество',
-    'price' => 'Цена'
+    'price' => 'Цена',
+    'stock' => 'Склад',
 ];
 
 $startRow = 1;
@@ -37,28 +38,57 @@ $nameColumn = 2;
 $quantityColumn = 3;
 $priceColumn = 4;
 $discountColumn = 5;
+$totalSumColumn = 6;
 
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 
+$stock = '';
+
+if (isset($data['stock']) && !empty($data['stock']))
+    switch ($data['stock']){
+        case 'Narva': {
+            $stock = 'ТЦ "Нарва"';
+            break;
+        }
+        case 'Oka': {
+            $stock = 'ТЦ "Ока" Колпино';
+            break;
+        }
+        default: break;
+    }
+
+//установка параметров таблицы
 if (isset($data['seller']) && !empty($data['seller']))
     switch ($data['seller']) {
         case 'DoctorBig':
+        {
+            $startRow = 23;
+            $startCol = 2;
+            $nameColumn = 4;
+            $quantityColumn = 16;
+            $totalSumColumn = 34;
+            break;
+        }
+        case 'DoctorStil':
         {
             $startRow = 24;
             $startCol = 2;
             $nameColumn = 7;
             $quantityColumn = 15;
-            $priceColumn = 31;
+            $totalSumColumn = 35;
             break;
         }
         case 'IridaMed': {
             $startRow = 25;
             $startCol = 2;
             $nameColumn = 4;
-            $quantityColumn = 21;
-            $priceColumn = 28;
-            $discountColumn = 33;
+//            $quantityColumn = 21;
+//            $priceColumn = 28;
+//            $discountColumn = 33;
+            $quantityColumn = 26;
+            $priceColumn = 31;
+            $discountColumn = 35;
             break;
         }
         default: {
@@ -66,6 +96,8 @@ if (isset($data['seller']) && !empty($data['seller']))
             die();
         }
     }
+
+
 for ($row = $startRow, $i = 1; $row <= $highestRow; ++$row, ++$i) {
     $index = $worksheet->getCellByColumnAndRow($startCol, $row)->getValue();
     if ($row > $startRow && $index != $worksheet->getCellByColumnAndRow($startCol, $row - 1)->getValue() + 1) {
@@ -76,8 +108,13 @@ for ($row = $startRow, $i = 1; $row <= $highestRow; ++$row, ++$i) {
 
     $db = new DB();
     $product = $db->getProductByPattern($value);
+
     $product['quantity'] = $worksheet->getCellByColumnAndRow($quantityColumn, $row)->getValue();
-    $product['price'] = $worksheet->getCellByColumnAndRow($priceColumn, $row)->getValue();
+
+    $totalSum = $worksheet->getCellByColumnAndRow($totalSumColumn, $row)->getValue();
+    $quantity = $worksheet->getCellByColumnAndRow($quantityColumn, $row)->getValue();
+    $product['price'] = round($totalSum / $quantity, 2);
+
     if($data['seller'] === 'IridaMed')
     {
         $basePrice = (float)($worksheet->getCellByColumnAndRow($priceColumn, $row)->getValue());
@@ -86,15 +123,26 @@ for ($row = $startRow, $i = 1; $row <= $highestRow; ++$row, ++$i) {
             ->setFormatCode(
                 \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_00
             );
-        $discount = $worksheet->getCellByColumnAndRow($discountColumn, $row)->getValue();
-        $discount = floatval(str_replace(',', '.', str_replace('.', '', $discount)));
-        $product['price'] = $basePrice - $discount;
+        if($discountColumn){
+            $discount = $worksheet->getCellByColumnAndRow($discountColumn, $row)->getValue();
+            $discount = floatval(
+                str_replace(',', '.', str_replace('.', '', $discount))
+                / $product['quantity']
+            );
+            $discount = round($discount, 2);
+            $product['price'] = $basePrice - $discount;
+        }else{
+            $product['price'] = $basePrice;
+        }
 
     }
+
+    $product['stock'] = $stock;
 
     $parsedArray[$i] = $product;
 }
 
+//Запись в файл
 $resultWorksheet = $spreadsheet->createSheet();
 $resultWorksheet->fromArray(
     $parsedArray,  // The data to set

@@ -84,3 +84,14 @@ input[type=submit]:hover {
 .autocomplete__item:hover{
     background: #cccccc;
 }
+
+.widget{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background: rgba(100, 100, 100, 0.8);
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+}

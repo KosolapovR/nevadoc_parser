@@ -58,16 +58,19 @@ function ready() {
         const uri = 'parser/'
 
         const $table = document.getElementById('parsedDataTable');
+        const $sum = document.getElementById('sum');
         const seller = document.getElementById('seller').value;
+        const stock = document.getElementById('stock').value;
 
-        sendData(uri, JSON.stringify({seller})
+        sendData(uri, JSON.stringify({seller, stock})
         )
             .then(res => {
                 debugger;
                 if (res.response !== 'Unknown seller') {
                     let tableHTML = '';
+                    let sum = 0;
 
-                    res.response.forEach(product => {
+                    res.response.forEach((product, index) => {
                         tableHTML += "<tr>";
                         tableHTML += `<td>${product.name}</td>`;
                         tableHTML += `<td>${product.size || ''}</td>`;
@@ -77,11 +80,16 @@ function ready() {
                         tableHTML += `<td>${product.print || ''}</td>`;
                         tableHTML += `<td>${product.quantity}</td>`;
                         tableHTML += `<td>${product.price}</td>`;
+                        tableHTML += `<td>${product.stock}</td>`;
                         tableHTML += "</tr>";
+
+                        if (index > 0)
+                            sum += product.quantity * product.price;
                     })
 
                     $table.innerHTML = tableHTML;
-                }else{
+                    $sum.innerText = sum.toFixed(2);
+                } else {
                     $table.innerHTML = '';
                 }
 
@@ -97,7 +105,7 @@ function ready() {
             },
             body: data
         });
-
+        debugger;
         return response.json();
     }
 

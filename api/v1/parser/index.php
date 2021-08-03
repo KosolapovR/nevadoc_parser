@@ -72,23 +72,23 @@ if (isset($data['seller']) && !empty($data['seller']))
         }
         case 'DoctorStil':
         {
-            $startRow = 24;
+            $startRow = 25;
             $startCol = 2;
             $nameColumn = 7;
-            $quantityColumn = 15;
-            $totalSumColumn = 35;
+            $quantityColumn = 28;
+            $totalSumColumn = 37;
             break;
         }
         case 'IridaMed': {
             $startRow = 25;
             $startCol = 2;
             $nameColumn = 4;
-//            $quantityColumn = 21;
-//            $priceColumn = 28;
-//            $discountColumn = 33;
-            $quantityColumn = 26;
-            $priceColumn = 31;
-            $discountColumn = 35;
+            $quantityColumn = 21;
+            $priceColumn = 28;
+            $discountColumn = 33;
+//            $quantityColumn = 26;
+//            $priceColumn = 31;
+//            $discountColumn = 35;
             break;
         }
         default: {

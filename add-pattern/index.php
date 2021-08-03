@@ -42,8 +42,11 @@
             <option value="40/42">40/42</option>
             <option value="44/46">44/46</option>
             <option value="48/50">48/50</option>
+            <option value="48/50">50/52</option>
             <option value="52/54">52/54</option>
+            <option value="52/54">54/56</option>
             <option value="56/58">56/58</option>
+            <option value="56/58">58/60</option>
             <option value="60/62">60/62</option>
             <option value="64/66">64/66</option>
         </select>
@@ -56,7 +59,9 @@
             <option value="бел.">бел.</option>
             <option value="бел./т.син.">бел./т.син.</option>
             <option value="бел./фиол.">бел./фиол.</option>
+            <option value="бел./фуксия.">бел./фуксия</option>
             <option value="бел./коралл">бел./коралл</option>
+            <option value="бел./мята">бел./мята</option>
             <option value="бел./бирюза">бел./бирюза</option>
             <option value="бел./гол.">бел./гол.</option>
             <option value="бел./сирень">бел./сирень</option>
@@ -148,6 +153,8 @@
             <option value="совы">совы</option>
             <option value="кошки">кошки</option>
             <option value="сердце">сердце</option>
+            <option value="слова">слова</option>
+            <option value="медицина">медицина</option>
             <option value="кардиограмма">кардиограмма</option>
             <option value="бэтмэн">бэтмэн</option>
             <option value="зубик">зубик</option>

@@ -34,7 +34,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 ->setPrint($data['print']);
 
             $res = $db->addPattern($pattern);
-            echo json_encode(['res' => $res], true);
+            echo json_encode(['res' => $res, 'message' => 'product with same pattern already exist'], true);
         }
 
         break;
